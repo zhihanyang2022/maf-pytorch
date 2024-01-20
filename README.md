@@ -29,9 +29,9 @@ for i in range(1000):  # using entire dataset each time
 
 ### Potential function U1
 
-|             Unnormalized density              |              GMM (50) density              |                GMM samples                 |
-| :-------------------------------------------: | :----------------------------------------: | :----------------------------------------: |
-| <img src="maf/2d_data/U1_unnorm_density.png"> | <img src="maf/2d_data/U1_gmm_density.png"> | <img src="maf/2d_data/U1_gmm_samples.png"> |
+|            Unnormalized density            |              GMM (50) density              |                GMM samples                 |
+| :----------------------------------------: | :----------------------------------------: | :----------------------------------------: |
+| <img src="maf/2d_data/U1_gmm_density.png"> | <img src="maf/2d_data/U1_gmm_density.png"> | <img src="maf/2d_data/U1_gmm_samples.png"> |
 
 ### Potential function U2
 
