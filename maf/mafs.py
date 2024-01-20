@@ -29,16 +29,17 @@ class MAFBase(nn.Module):
         self.base_dist = None
 
     def get_ms_and_vs(self, x):
-        ms, vs = [], []
-        temp = x
-        for i, layer in enumerate(self.layers):
-            if isinstance(layer, BatchNorm):
-                temp, m, v = layer.calc_u_and_logabsdet(temp, return_m_and_v=True)
-                ms.append(m)
-                vs.append(v)
-            else:
-                temp, _ = layer.calc_u_and_logabsdet(temp)
-        return ms, vs
+        with torch.no_grad():
+            ms, vs = [], []
+            temp = x
+            for i, layer in enumerate(self.layers):
+                if isinstance(layer, BatchNorm):
+                    temp, m, v = layer.calc_u_and_logabsdet(temp, return_m_and_v=True)
+                    ms.append(m)
+                    vs.append(v)
+                else:
+                    temp, _ = layer.calc_u_and_logabsdet(temp)
+            return ms, vs
 
     def log_prob(self, x, ms=None, vs=None):
         log_prob = torch.zeros(x.shape[0])
