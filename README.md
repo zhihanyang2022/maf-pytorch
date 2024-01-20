@@ -29,7 +29,7 @@ for i in range(1000):  # using entire dataset each time
 
 ### Potential function U1
 
-|             Unnormalized density              |      GMM (50) density fitted using VI      |                GMM samples                 |
+|             Unnormalized density              |              GMM (50) density              |                GMM samples                 |
 | :-------------------------------------------: | :----------------------------------------: | :----------------------------------------: |
 | <img src="maf/2d_data/U1_unnorm_density.png"> | <img src="maf/2d_data/U1_gmm_density.png"> | <img src="maf/2d_data/U1_gmm_samples.png"> |
 
@@ -39,7 +39,7 @@ for i in range(1000):  # using entire dataset each time
 
 ### Potential function U2
 
-|             Unnormalized density              |       GMM-50 density fitted using VI       |                GMM samples                 |
+|             Unnormalized density              |               GMM-50 density               |                GMM samples                 |
 | :-------------------------------------------: | :----------------------------------------: | :----------------------------------------: |
 | <img src="maf/2d_data/U2_unnorm_density.png"> | <img src="maf/2d_data/U2_gmm_density.png"> | <img src="maf/2d_data/U2_gmm_samples.png"> |
 
@@ -49,7 +49,7 @@ for i in range(1000):  # using entire dataset each time
 
 ### Potential function U3
 
-|             Unnormalized density              |       GMM-50 density fitted using VI       |                GMM samples                 |
+|             Unnormalized density              |               GMM-50 density               |                GMM samples                 |
 | :-------------------------------------------: | :----------------------------------------: | :----------------------------------------: |
 | <img src="maf/2d_data/U3_unnorm_density.png"> | <img src="maf/2d_data/U3_gmm_density.png"> | <img src="maf/2d_data/U3_gmm_samples.png"> |
 
@@ -59,7 +59,7 @@ for i in range(1000):  # using entire dataset each time
 
 ### Potential function U4
 
-|             Unnormalized density              |       GMM-50 density fitted using VI       |                GMM samples                 |
+|             Unnormalized density              |               GMM-50 density               |                GMM samples                 |
 | :-------------------------------------------: | :----------------------------------------: | :----------------------------------------: |
 | <img src="maf/2d_data/U4_unnorm_density.png"> | <img src="maf/2d_data/U4_gmm_density.png"> | <img src="maf/2d_data/U4_gmm_samples.png"> |
 
@@ -69,7 +69,7 @@ for i in range(1000):  # using entire dataset each time
 
 ### Potential function U8
 
-|             Unnormalized density              |       GMM-50 density fitted using VI       |                GMM samples                 |
+|             Unnormalized density              |               GMM-50 density               |                GMM samples                 |
 | :-------------------------------------------: | :----------------------------------------: | :----------------------------------------: |
 | <img src="maf/2d_data/U8_unnorm_density.png"> | <img src="maf/2d_data/U8_gmm_density.png"> | <img src="maf/2d_data/U8_gmm_samples.png"> |
 
