@@ -19,11 +19,11 @@ class BatchNorm(nn.Module):
             m = x.mean(dim=0)  # (data_dim)
             v = x.var(dim=0)  # (data_dim)
 
-        # empirically, I found no numerical issue even without adding 1e-5 to var
+        v_safe = v + 1e-5
 
-        u = (x - m) * torch.pow(v, -0.5) * torch.exp(self.gamma) + self.beta
+        u = (x - m) * torch.pow(v_safe, -0.5) * torch.exp(self.gamma) + self.beta
 
-        logabsdet = torch.sum(self.gamma - 0.5 * torch.log(v))
+        logabsdet = torch.sum(self.gamma - 0.5 * torch.log(v_safe))
 
         if return_m_and_v:
             return u, m, v

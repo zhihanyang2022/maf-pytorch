@@ -20,7 +20,7 @@ parser.add_argument("dataset", help="Name of potential function")
 parser.add_argument("model", type=str)
 parser.add_argument("seed", type=int)
 parser.add_argument("-num_ar_layers", help="Number of autoregressive layers", type=int)
-parser.add_argument("-alternate_input_order", type=int)
+parser.add_argument("-alternate_input_order", type=int)  # use 0 or 1 as input
 
 args = parser.parse_args()
 config = vars(args)

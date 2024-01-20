@@ -11,14 +11,14 @@ Modular PyTorch code for fully reproducing
 }
 ```
 
-Here's a quick example of how you fit MADE to a dataset of your choice:
+Here's a quick example of how can you fit MADE to a dataset of your choice:
 
 ```python
 data = torch.from_numpy(your_data)  # (batch_size, data_dim)
-model = MADE(data_dim=data.shape[1], hidden_dims=[100, 100])
-opt = optim.Adam(model.parameters(), lr=1e-3)
+dist = MADE(data_dim=data.shape[1], hidden_dims=[100, 100])  # dist for distribution
+opt = optim.Adam(dist.parameters(), lr=1e-3)
 for i in range(1000):  # using entire dataset each time
-    loss = - model.log_prob(data).mean()
+    loss = - dist.log_prob(data).mean()
     opt.zero_grad()
     loss.backward()
     opt.step()
@@ -89,9 +89,97 @@ python 2d_density_estimation.py U2 maf-mog 1 -num_ar_layers=5 -alternate_input_o
 
 ### Potential function U3
 
+Unnormalized density, estimated density by GMM, and samples from it:
+
+<p align="middle">
+  <img src="maf/2d_data/U3_unnorm_density.png" width="19%"/>
+  <img src="maf/2d_data/U3_gmm_density.png" width="19%" /> 
+  <img src="maf/2d_data/U3_gmm_samples.png" width="19%" />
+</p>
+
+Estimated densities:
+
+<p align="middle">
+  <img src="maf/saved/2d_density_estimation/U3 MADE Density.png" width="19%"/>
+  <img src="maf/saved/2d_density_estimation/U3 MADE-MOG Density.png" width="19%" /> 
+  <img src="maf/saved/2d_density_estimation/U3 MAF (20) Density.png" width="19%" />
+  <img src="maf/saved/2d_density_estimation/U3 MAF (20 fixed) Density.png" width="20%" />
+  <img src="maf/saved/2d_density_estimation/U3 MAF-MOG (5) Density.png" width="19%" />
+</p>   
+
+Command line code:
+
+```bash
+python 2d_density_estimation.py U3 made 1
+python 2d_density_estimation.py U3 made-mog 1
+python 2d_density_estimation.py U3 maf 1 -num_ar_layers=20 -alternate_input_order=1
+python 2d_density_estimation.py U3 maf 1 -num_ar_layers=20 -alternate_input_order=0
+python 2d_density_estimation.py U3 maf-mog 1 -num_ar_layers=5 -alternate_input_order=1
+```
+
 ### Potential function U4
 
+Unnormalized density, estimated density by GMM, and samples from it:
+
+<p align="middle">
+  <img src="maf/2d_data/U4_unnorm_density.png" width="19%"/>
+  <img src="maf/2d_data/U4_gmm_density.png" width="19%" /> 
+  <img src="maf/2d_data/U4_gmm_samples.png" width="19%" />
+</p>
+
+Estimated densities:
+
+<p align="middle">
+  <img src="maf/saved/2d_density_estimation/U4 MADE Density.png" width="19%"/>
+  <img src="maf/saved/2d_density_estimation/U4 MADE-MOG Density.png" width="19%" /> 
+  <img src="maf/saved/2d_density_estimation/U4 MAF (20) Density.png" width="19%" />
+  <img src="maf/saved/2d_density_estimation/U4 MAF (20 fixed) Density.png" width="20%" />
+  <img src="maf/saved/2d_density_estimation/U4 MAF-MOG (5) Density.png" width="19%" />
+</p>   
+
+Command line code:
+
+```bash
+python 2d_density_estimation.py U4 made 1
+python 2d_density_estimation.py U4 made-mog 1
+python 2d_density_estimation.py U4 maf 1 -num_ar_layers=20 -alternate_input_order=1
+python 2d_density_estimation.py U4 maf 1 -num_ar_layers=20 -alternate_input_order=0
+python 2d_density_estimation.py U4 maf-mog 1 -num_ar_layers=5 -alternate_input_order=1
+```
+
 ### Potential function U8
+
+Unnormalized density, estimated density by GMM, and samples from it:
+
+<p align="middle">
+  <img src="maf/2d_data/U8_unnorm_density.png" width="19%"/>
+  <img src="maf/2d_data/U8_gmm_density.png" width="19%" /> 
+  <img src="maf/2d_data/U8_gmm_samples.png" width="19%" />
+</p>
+
+Estimated densities:
+
+<p align="middle">
+  <img src="maf/saved/2d_density_estimation/U8 MADE Density.png" width="19%"/>
+  <img src="maf/saved/2d_density_estimation/U8 MADE-MOG Density.png" width="19%" /> 
+  <img src="maf/saved/2d_density_estimation/U8 MAF (20) Density.png" width="19%" />
+  <img src="maf/saved/2d_density_estimation/U8 MAF (20 fixed) Density.png" width="20%" />
+  <img src="maf/saved/2d_density_estimation/U8 MAF-MOG (5) Density.png" width="19%" />
+</p>   
+
+Command line code:
+
+```bash
+python 2d_density_estimation.py U8 made 1
+python 2d_density_estimation.py U8 made-mog 1
+python 2d_density_estimation.py U8 maf 1 -num_ar_layers=20 -alternate_input_order=1
+python 2d_density_estimation.py U8 maf 1 -num_ar_layers=20 -alternate_input_order=0
+python 2d_density_estimation.py U8 maf-mog 1 -num_ar_layers=5 -alternate_input_order=1
+```
+
+### Half moon
+
+
 
 ## Task 2: High-dimensional density estimation
 
