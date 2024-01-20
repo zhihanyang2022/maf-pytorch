@@ -129,7 +129,7 @@ plt.figure(figsize=(5, 5))
 
 plt.contourf(
     xxs.numpy(), yys.numpy(), probs.numpy().reshape(100, 100),
-    levels=20, cmap="turbo", extent=[-5, 9, -7.5, 7.5]
+    levels=20, cmap="turbo"
 )
 
 plt.xticks([])
