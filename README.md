@@ -43,7 +43,7 @@ Estimated densities (trained on GMM samples):
   <img src="maf/saved/2d_density_estimation/U1 MADE Density.png" width="19%"/>
   <img src="maf/saved/2d_density_estimation/U1 MADE-MOG Density.png" width="19%" /> 
   <img src="maf/saved/2d_density_estimation/U1 MAF (20) Density.png" width="19%" />
-  <img src="maf/saved/2d_density_estimation/U1 MAF (20 fixed) Density.png" width="19%" />
+  <img src="maf/saved/2d_density_estimation/U1 MAF (20 fixed) Density.png" width="20%" />
   <img src="maf/saved/2d_density_estimation/U1 MAF-MOG (5) Density.png" width="19%" />
 </p>   
 
@@ -58,6 +58,34 @@ python 2d_density_estimation.py U1 maf-mog 1 -num_ar_layers=5 -alternate_input_o
 ```
 
 ### Potential function U2
+
+Unnormalized density, estimated density by GMM, and samples from it:
+
+<p align="middle">
+  <img src="maf/2d_data/U2_unnorm_density.png" width="19%"/>
+  <img src="maf/2d_data/U2_gmm_density.png" width="19%" /> 
+  <img src="maf/2d_data/U2_gmm_samples.png" width="19%" />
+</p>
+
+Estimated densities:
+
+<p align="middle">
+  <img src="maf/saved/2d_density_estimation/U2 MADE Density.png" width="19%"/>
+  <img src="maf/saved/2d_density_estimation/U2 MADE-MOG Density.png" width="19%" /> 
+  <img src="maf/saved/2d_density_estimation/U2 MAF (20) Density.png" width="19%" />
+  <img src="maf/saved/2d_density_estimation/U2 MAF (20 fixed) Density.png" width="20%" />
+  <img src="maf/saved/2d_density_estimation/U2 MAF-MOG (5) Density.png" width="19%" />
+</p>   
+
+Command line code:
+
+```bash
+python 2d_density_estimation.py U2 made 1
+python 2d_density_estimation.py U2 made-mog 1
+python 2d_density_estimation.py U2 maf 1 -num_ar_layers=20 -alternate_input_order=1
+python 2d_density_estimation.py U2 maf 1 -num_ar_layers=20 -alternate_input_order=0
+python 2d_density_estimation.py U2 maf-mog 1 -num_ar_layers=5 -alternate_input_order=1
+```
 
 ### Potential function U3
 

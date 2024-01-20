@@ -29,9 +29,10 @@ dataset = config["dataset"]
 model = config["model"]
 seed = config["seed"]
 num_ar_layers = config["num_ar_layers"]
-alternate = bool(config["alternate_input_order"])
+alternate = config["alternate_input_order"]
 
-print(alternate)
+if alternate is not None:
+    alternate = bool(alternate)
 
 assert model in ["made", "made-mog", "maf", "maf-mog"]
 
