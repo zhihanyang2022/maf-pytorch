@@ -1,5 +1,0 @@
-name: mlp
-channels:
-  - defaults
-  - conda-forge
-prefix: /Users/zhihanyang/miniforge3/envs/mlp
