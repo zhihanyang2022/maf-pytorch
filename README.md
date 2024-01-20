@@ -29,49 +29,41 @@ for i in range(1000):  # using entire dataset each time
 
 ### Potential function U1
 
-|            Unnormalized density            |              GMM (50) density              |                GMM samples                 |
-| :----------------------------------------: | :----------------------------------------: | :----------------------------------------: |
-| <img src="maf/2d_data/U1_gmm_density.png"> | <img src="maf/2d_data/U1_gmm_density.png"> | <img src="maf/2d_data/U1_gmm_samples.png"> |
+Unnormalized density, estimated density by GMM with 50 components (fitted using VI), and samples from it:
+
+<p align="middle">
+  <img src="maf/2d_data/U1_unnorm_density.png" width="19%"/>
+  <img src="maf/2d_data/U1_gmm_density.png" width="19%" /> 
+  <img src="maf/2d_data/U1_gmm_samples.png" width="19%" />
+</p>
+
+Estimated densities (trained on GMM samples):
+
+<p align="middle">
+  <img src="maf/saved/2d_density_estimation/U1 MADE Density.png" width="19%"/>
+  <img src="maf/saved/2d_density_estimation/U1 MADE-MOG Density.png" width="19%" /> 
+  <img src="maf/saved/2d_density_estimation/U1 MAF (20) Density.png" width="19%" />
+  <img src="maf/saved/2d_density_estimation/U1 MAF (20 fixed) Density.png" width="19%" />
+  <img src="maf/saved/2d_density_estimation/U1 MAF-MOG (5) Density.png" width="19%" />
+</p>   
+
+Command line code:
+
+```bash
+python 2d_density_estimation.py U1 made 1
+python 2d_density_estimation.py U1 made-mog 1
+python 2d_density_estimation.py U1 maf 1 -num_ar_layers=20 -alternate_input_order=1
+python 2d_density_estimation.py U1 maf 1 -num_ar_layers=20 -alternate_input_order=0
+python 2d_density_estimation.py U1 maf-mog 1 -num_ar_layers=5 -alternate_input_order=1
+```
 
 ### Potential function U2
 
-|             Unnormalized density              |               GMM-50 density               |                GMM samples                 |
-| :-------------------------------------------: | :----------------------------------------: | :----------------------------------------: |
-| <img src="maf/2d_data/U2_unnorm_density.png"> | <img src="maf/2d_data/U2_gmm_density.png"> | <img src="maf/2d_data/U2_gmm_samples.png"> |
-
-| MADE | MADE-MOG | MAF (20) | MAF (20) (fixed order) | MAF-MOG (20) |
-| :--: | :------: | :------: | :--------------------: | :----------: |
-|      |          |          |                        |              |
-
 ### Potential function U3
-
-|                  Unnormalized density                   |                    GMM-50 density                    |                GMM samples                 |
-| :-----------------------------------------------------: | :--------------------------------------------------: | :----------------------------------------: |
-| <img src="maf/2d_data/U3_unnorm_density.png" width=200> | <img src="maf/2d_data/U3_gmm_density.png" width=200> | <img src="maf/2d_data/U3_gmm_samples.png"> |
-
-| MADE | MADE-MOG | MAF (20) | MAF (20) (fixed order) | MAF-MOG (20) |
-| :--: | :------: | :------: | :--------------------: | :----------: |
-|      |          |          |                        |              |
 
 ### Potential function U4
 
-|             Unnormalized density              |               GMM-50 density               |                GMM samples                 |
-| :-------------------------------------------: | :----------------------------------------: | :----------------------------------------: |
-| <img src="maf/2d_data/U4_unnorm_density.png"> | <img src="maf/2d_data/U4_gmm_density.png"> | <img src="maf/2d_data/U4_gmm_samples.png"> |
-
-| MADE | MADE-MOG | MAF (20) | MAF (20) (fixed order) | MAF-MOG (20) |
-| :--: | :------: | :------: | :--------------------: | :----------: |
-|      |          |          |                        |              |
-
 ### Potential function U8
-
-|             Unnormalized density              |               GMM-50 density               |                GMM samples                 |
-| :-------------------------------------------: | :----------------------------------------: | :----------------------------------------: |
-| <img src="maf/2d_data/U8_unnorm_density.png"> | <img src="maf/2d_data/U8_gmm_density.png"> | <img src="maf/2d_data/U8_gmm_samples.png"> |
-
-| MADE | MADE-MOG | MAF (20) | MAF (20) (fixed order) | MAF-MOG (20) |
-| :--: | :------: | :------: | :--------------------: | :----------: |
-|      |          |          |                        |              |
 
 ## Task 2: High-dimensional density estimation
 

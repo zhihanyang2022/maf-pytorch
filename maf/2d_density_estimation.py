@@ -1,4 +1,5 @@
 import argparse
+import os
 
 import numpy as np
 import torch
@@ -19,7 +20,7 @@ parser.add_argument("dataset", help="Name of potential function")
 parser.add_argument("model", type=str)
 parser.add_argument("seed", type=int)
 parser.add_argument("-num_ar_layers", help="Number of autoregressive layers", type=int)
-parser.add_argument("-alternate_input_order", type=bool)
+parser.add_argument("-alternate_input_order", type=int)
 
 args = parser.parse_args()
 config = vars(args)
@@ -28,7 +29,9 @@ dataset = config["dataset"]
 model = config["model"]
 seed = config["seed"]
 num_ar_layers = config["num_ar_layers"]
-alternate = config["alternate_input_order"]
+alternate = bool(config["alternate_input_order"])
+
+print(alternate)
 
 assert model in ["made", "made-mog", "maf", "maf-mog"]
 
@@ -48,9 +51,9 @@ run = wandb.init(
 
 # Select the correct dataset
 
-data = np.load(f"./2d_data/{dataset}_samples_10000.npy")
-train_data = torch.from_numpy(data[:9000])
-test_data = torch.from_numpy(data[9000:])
+data = np.load(f"./2d_data/{dataset}_gmm_samples.npy")
+train_data = torch.from_numpy(data[:10000])
+test_data = torch.from_numpy(data[10000:])
 
 train_ds = TensorDataset(train_data)
 train_dl = DataLoader(train_ds, batch_size=100)
@@ -135,14 +138,22 @@ plt.contourf(
 plt.xticks([])
 plt.yticks([])
 
-plt.show()
-
-# TODO: seed the data generation process
-# TODO: add the half moon datasets
-# TODO: save final density
-# TODO: correct the grid issue
-# TODO: write the command line code for all experiments (including no alternate)
 # TODO: generate some data (especially make sure this works for MAFs)
+# TODO: add the half moon datasets
+
+if model in ["made", "made-mog"]:
+    png_name = f"{dataset} {model.upper()} Density"
+elif model in ["maf", "maf-mog"]:
+    if alternate:
+        png_name = f"{dataset} {model.upper()} ({num_ar_layers}) Density"
+    else:
+        png_name = f"{dataset} {model.upper()} ({num_ar_layers} fixed) Density"
+
+plt.title(png_name, fontsize=20, fontweight="bold")
+
+plt.savefig(os.path.join(wandb.run.dir, png_name + ".png"), dpi=300, bbox_inches="tight")
+
+torch.save(dist.state_dict(), os.path.join(wandb.run.dir, "dist.pth"))
 
 # Rest now
 
