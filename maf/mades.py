@@ -2,7 +2,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.distributions import Independent, Normal, Categorical
+
+from gaussian import MultivariateStandardGaussian
 
 
 def create_degrees(n_inputs, n_hiddens, input_order, mode):
@@ -101,25 +102,25 @@ class MADE(nn.Module):
 
         hidden_layers = [
             MaskedLinear(weight_masks[0], data_dim, hidden_dims[0]),
-            nn.ELU()
+            nn.ReLU()
         ]
 
         for i, (h0, h1) in enumerate(zip(hidden_dims[:-1], hidden_dims[1:])):
             hidden_layers.append(MaskedLinear(weight_masks[i + 1], h0, h1))
-            hidden_layers.append(nn.ELU())
+            hidden_layers.append(nn.ReLU())
 
         self.hidden = nn.Sequential(*hidden_layers)
 
         # parametrize the output distributions
 
-        self.mu = MaskedLinear(weight_masks[-1], hidden_dims[-1], data_dim)
-        self.alpha = MaskedLinear(weight_masks[-1], hidden_dims[-1], data_dim)
+        self.mean_layer = MaskedLinear(weight_masks[-1], hidden_dims[-1], data_dim)
+        self.log_precision_layer = MaskedLinear(weight_masks[-1], hidden_dims[-1], data_dim)
 
         # base distribution
 
-        self.base_dist = Independent(Normal(torch.zeros(data_dim), torch.ones(data_dim)), 1)
+        self.base_dist = MultivariateStandardGaussian(D=data_dim)
 
-    def calc_mu_and_alpha(self, x):
+    def calc_mean_and_log_precision(self, x):
         """
         x: (bs, D)
         h: (bs, H)
@@ -127,15 +128,21 @@ class MADE(nn.Module):
         alpha: (bs, D)
         """
         h = self.hidden(x)
-        return self.mu(h), self.alpha(h)
+        return self.mean_layer(h), self.log_precision_layer(h)
 
     def calc_u_and_logabsdet(self, x):
-        """Only call this method directly when stacking GaussianMADEs into an MAF"""
-        mu, alpha = self.calc_mu_and_alpha(x)
-        std = torch.exp(alpha)
-        std_safe = std + 1e-5  # absolutely crucial for numerical stability (empirically)
-        u = (x - mu) / std_safe
-        logabsdet = - std_safe.log().sum(dim=1)
+        """
+        Only call this method directly when stacking GaussianMADEs into an MAF
+
+        I tried every trick I can think of to make this function as numerically stable as possible.
+        (1) Model log_precision instead of log_std to avoid divisions
+        (2) Use softplus instead of exp to avoid large gradients
+        """
+        mean, log_precision = self.calc_mean_and_log_precision(x)
+        half_log_precision = 0.5 * log_precision
+        one_over_std = F.softplus(half_log_precision)
+        u = (x - mean) * one_over_std
+        logabsdet = one_over_std.log().sum(dim=1)
         return u, logabsdet
 
     def log_prob(self, x):
@@ -151,18 +158,18 @@ class MADE(nn.Module):
 half_log_2pi = 0.5 * torch.log(torch.Tensor([2.]) * torch.pi)
 
 
-def mog_1d_loglik(x, mu, log_std, log_pi):
+def mog_1d_loglik(x, mean, log_precision, log_pi):
     """
     Compute the log likelihood of a one-dimensional mixture of Gaussians.
 
     :param x: ()
-    :param mu: (number of components)
-    :param log_std: (number of components)
+    :param mean: (number of components)
+    :param log_precision: (number of components)
     :param log_pi: (number of components)
     :return: ()
     """
     return torch.logsumexp(
-        log_pi - log_std - half_log_2pi - 0.5 * ((x - mu) / (log_std.exp() + 1e-5)) ** 2,
+        log_pi + 0.5 * log_precision - half_log_2pi - 0.5 * ((x - mean) * torch.exp(0.5 * log_precision)) ** 2,
         dim=0
     )
 
@@ -189,12 +196,12 @@ class MADE_MOG(nn.Module):
 
         hidden_layers = [
             MaskedLinear(weight_masks[0], data_dim, hidden_dims[0]),
-            nn.ELU()
+            nn.ReLU()
         ]
 
         for i, (h0, h1) in enumerate(zip(hidden_dims[:-1], hidden_dims[1:])):
             hidden_layers.append(MaskedLinear(weight_masks[i + 1], h0, h1))
-            hidden_layers.append(nn.ELU())
+            hidden_layers.append(nn.ReLU())
 
         self.hidden = nn.Sequential(*hidden_layers)
 
@@ -205,11 +212,11 @@ class MADE_MOG(nn.Module):
 
         fan_in = hidden_dims[-1]
 
-        self.mu_W = nn.Parameter(torch.randn(data_dim, hidden_dims[-1], num_components) / fan_in)
-        self.mu_b = nn.Parameter(torch.randn(data_dim, num_components))
+        self.mean_W = nn.Parameter(torch.randn(data_dim, hidden_dims[-1], num_components) / fan_in)
+        self.mean_b = nn.Parameter(torch.randn(data_dim, num_components))
 
-        self.log_std_W = nn.Parameter(torch.randn(data_dim, hidden_dims[-1], num_components) / fan_in)
-        self.log_std_b = nn.Parameter(torch.randn(data_dim, num_components))
+        self.log_precision_W = nn.Parameter(torch.randn(data_dim, hidden_dims[-1], num_components) / fan_in)
+        self.log_precision_b = nn.Parameter(torch.randn(data_dim, num_components))
 
         self.logit_pi_W = nn.Parameter(torch.randn(data_dim, hidden_dims[-1], num_components) / fan_in)
         self.logit_pi_b = nn.Parameter(torch.randn(data_dim, num_components))
@@ -219,7 +226,7 @@ class MADE_MOG(nn.Module):
         self.data_dim = data_dim
         self._formula = 'bi,idc->bdc'
 
-    def calc_mu_and_log_std_and_log_pi(self, x):
+    def calc_mean_and_log_precision_and_log_pi(self, x):
         """
         x: (bs, D)
         h: (bs, H)
@@ -233,10 +240,11 @@ class MADE_MOG(nn.Module):
 
         h = self.hidden(x)
 
-        mu = \
-            torch.einsum(self._formula, h, torch.transpose(self.mu_W * self.final_mask, 0, 1)) + self.mu_b
-        log_std = \
-            torch.einsum(self._formula, h, torch.transpose(self.log_std_W * self.final_mask, 0, 1)) + self.log_std_b
+        mean = \
+            torch.einsum(self._formula, h, torch.transpose(self.mean_W * self.final_mask, 0, 1)) + self.mean_b
+        log_precision = \
+            torch.einsum(self._formula, h, torch.transpose(self.log_precision_W * self.final_mask, 0, 1)) + \
+            self.log_precision_b
 
         # logit_pi differs from log_pi in the sense that logit_pi is the log UNNORMALIZED probabilities
 
@@ -245,39 +253,40 @@ class MADE_MOG(nn.Module):
             dim=2
         )
 
-        return mu, log_std, log_pi
+        return mean, log_precision, log_pi
 
     def log_prob(self, x):
-        mu, log_std, log_pi = self.calc_mu_and_log_std_and_log_pi(x)
-        return mog_1d_loglik_batch(x, mu, log_std, log_pi).sum(dim=1)  # interpret dim=1 as an event dimension
+        mean, log_precision, log_pi = self.calc_mean_and_log_precision_and_log_pi(x)
+        return mog_1d_loglik_batch(x, mean, log_precision, log_pi).sum(dim=1)  # interpret dim=1 as an event dimension
 
-    def sample(self, n):
-        """
-        Not easy to do reparametrized sampling for mixture of Gaussians
-
-        :param n: number of samples to collect
-        :return: samples
-        """
-
-        with torch.no_grad():
-
-            x = torch.zeros(n, self.data_dim)
-
-            for d in range(self.data_dim):
-
-                # full forward pass
-                mu, log_std, log_pi = self.calc_mu_and_log_std_and_log_pi(x)  # (n, D, C)
-
-                # select the parameters for the d-th dimension
-                mu, log_std, log_pi = mu[:, d, :], log_std[:, d, :], log_pi[:, d, :]  # (n, C)
-
-                # ancestral sampling
-                comp_indices = Categorical(logits=log_pi).sample()  # (n, )
-                mu_selected = mu.gather(1, comp_indices.reshape(-1, 1)).reshape(-1)  # (n, )
-                log_std_selected = log_std.gather(1, comp_indices.reshape(-1, 1)).reshape(-1)  # (n, )
-                x_d = Normal(loc=mu_selected, scale=log_std_selected.exp()).sample()  # (n, )
-
-                # store samples for the d-th dimension into x
-                x[:, d] = x_d
-
-            return x
+    # def sample(self, n):
+    #     """
+    #     Not easy to do reparametrized sampling for mixture of Gaussians
+    #
+    #     :param n: number of samples to collect
+    #     :return: samples
+    #     """
+    #
+    #     with torch.no_grad():
+    #
+    #         x = torch.zeros(n, self.data_dim)
+    #
+    #         for d in range(self.data_dim):
+    #
+    #             # full forward pass
+    #             mu, log_precision, log_pi = self.calc_mu_and_log_precision_and_log_pi(x)  # (n, D, C)
+    #
+    #             # select the parameters for the d-th dimension
+    #             mu, log_precision, log_pi = mu[:, d, :], log_precision[:, d, :], log_pi[:, d, :]  # (n, C)
+    #
+    #             # ancestral sampling
+    #             comp_indices = Categorical(logits=log_pi).sample()  # (n, )
+    #             mu_selected = mu.gather(1, comp_indices.reshape(-1, 1)).reshape(-1)  # (n, )
+    #             log_std_selected = log_precision.gather(1, comp_indices.reshape(-1, 1)).reshape(-1)  # (n, )
+    #             # TODO: change this line of code to scaling
+    #             x_d = Normal(loc=mu_selected, scale=log_std_selected.exp() + 1e-5).sample()  # (n, )
+    #
+    #             # store samples for the d-th dimension into x
+    #             x[:, d] = x_d
+    #
+    #         return x

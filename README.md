@@ -33,7 +33,7 @@ for i in range(1000):  # using entire dataset each time
 
 ## Task 1: 2D density estimation
 
-In all the following plots, the horizontal axis represents $x_1$ and the vertical axis represents $x_2$. All models use sequential input order, i.e., $p(x_1 | x_2) = p(x_1) p(x_2|x_1)$.
+In the following plots, the horizontal axes represent $x_1$ and the vertical axes represent $x_2$. All models used sequential input order, i.e., $p(x_1 | x_2) = p(x_1) p(x_2|x_1)$. All datasets were generated using `maf/generate_2d_data.ipynb`.
 
 ### Half moon (the easy version)
 
