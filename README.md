@@ -63,9 +63,9 @@ Command line code:
 
 ```bash
 python 2d_density_estimation.py U1 made 1
-python 2d_density_estimation.py U1 made-mog 1
+python 2d_density_estimation.py U1 maf 1 -num_ar_layers=10 -alternate_input_order=0  # fixed
 python 2d_density_estimation.py U1 maf 1 -num_ar_layers=10 -alternate_input_order=1
-python 2d_density_estimation.py U1 maf 1 -num_ar_layers=10 -alternate_input_order=0
+python 2d_density_estimation.py U1 made-mog 1
 python 2d_density_estimation.py U1 maf-mog 1 -num_ar_layers=5 -alternate_input_order=1
 ```
 
@@ -94,9 +94,9 @@ Command line code:
 
 ```bash
 python 2d_density_estimation.py U2 made 1
-python 2d_density_estimation.py U2 made-mog 1
-python 2d_density_estimation.py U2 maf 1 -num_ar_layers=10 -alternate_input_order=1
 python 2d_density_estimation.py U2 maf 1 -num_ar_layers=10 -alternate_input_order=0
+python 2d_density_estimation.py U2 maf 1 -num_ar_layers=10 -alternate_input_order=1
+python 2d_density_estimation.py U2 made-mog 1
 python 2d_density_estimation.py U2 maf-mog 1 -num_ar_layers=5 -alternate_input_order=1
 ```
 
@@ -125,9 +125,9 @@ Command line code:
 
 ```bash
 python 2d_density_estimation.py U3 made 1
-python 2d_density_estimation.py U3 made-mog 1
-python 2d_density_estimation.py U3 maf 1 -num_ar_layers=10 -alternate_input_order=1
 python 2d_density_estimation.py U3 maf 1 -num_ar_layers=10 -alternate_input_order=0
+python 2d_density_estimation.py U3 maf 1 -num_ar_layers=10 -alternate_input_order=1
+python 2d_density_estimation.py U3 made-mog 1
 python 2d_density_estimation.py U3 maf-mog 1 -num_ar_layers=5 -alternate_input_order=1
 ```
 
@@ -156,9 +156,9 @@ Command line code (using seed 1 for MAF (20) led to numerical problems for some 
 
 ```bash
 python 2d_density_estimation.py U4 made 1
-python 2d_density_estimation.py U4 made-mog 1
-python 2d_density_estimation.py U4 maf 1 -num_ar_layers=10 -alternate_input_order=1
 python 2d_density_estimation.py U4 maf 1 -num_ar_layers=10 -alternate_input_order=0
+python 2d_density_estimation.py U4 maf 1 -num_ar_layers=10 -alternate_input_order=1
+python 2d_density_estimation.py U4 made-mog 1
 python 2d_density_estimation.py U4 maf-mog 1 -num_ar_layers=5 -alternate_input_order=1
 ```
 
@@ -187,9 +187,9 @@ Command line code:
 
 ```bash
 python 2d_density_estimation.py U8 made 1
-python 2d_density_estimation.py U8 made-mog 1
-python 2d_density_estimation.py U8 maf 1 -num_ar_layers=10 -alternate_input_order=1
 python 2d_density_estimation.py U8 maf 1 -num_ar_layers=10 -alternate_input_order=0
+python 2d_density_estimation.py U8 maf 1 -num_ar_layers=10 -alternate_input_order=1
+python 2d_density_estimation.py U8 made-mog 1
 python 2d_density_estimation.py U8 maf-mog 1 -num_ar_layers=5 -alternate_input_order=1
 ```
 
