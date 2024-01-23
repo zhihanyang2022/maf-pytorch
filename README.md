@@ -31,17 +31,13 @@ for i in range(1000):  # using entire dataset each time
     print(float(loss))
 ```
 
+Please see **Implementation notes** for an important code-level detail.
+
 ## Task 1: 2D density estimation
 
-In the following plots, the horizontal axes represent $x_1$ and the vertical axes represent $x_2$. All models used sequential input order, i.e., $p(x_1 | x_2) = p(x_1) p(x_2|x_1)$. All datasets were generated using `maf/generate_2d_data.ipynb`.
+In the following plots, the horizontal axes represent $x_1$ and the vertical axes represent $x_2$.  All datasets (GMM samples) were generated using `maf/generate_2d_data.ipynb`. All models used sequential input order, i.e., $p(x_1 , x_2) = p(x_1) p(x_2|x_1)$.
 
-### Half moon (the easy version)
-
-
-
-### Half moon (the hard version)
-
-
+Training code is `maf/2d_density_estimation.py`. Sampling code is `maf/generate_2d_data_from_trained_model.ipynb` (I didn't put the plots of samples below but you can check them out there). 
 
 ### Potential function U1
 
@@ -57,9 +53,9 @@ Estimated densities (trained on GMM samples):
 
 <p align="middle">
   <img src="maf/saved/2d_density_estimation/U1 MADE Density.png" width="19%"/>
+  <img src="maf/saved/2d_density_estimation/U1 MAF (10 fixed) Density.png" width="19.8%" />
+  <img src="maf/saved/2d_density_estimation/U1 MAF (10) Density.png" width="19%" />
   <img src="maf/saved/2d_density_estimation/U1 MADE-MOG Density.png" width="19%" /> 
-  <img src="maf/saved/2d_density_estimation/U1 MAF (20) Density.png" width="19%" />
-  <img src="maf/saved/2d_density_estimation/U1 MAF (20 fixed) Density.png" width="19.8%" />
   <img src="maf/saved/2d_density_estimation/U1 MAF-MOG (5) Density.png" width="19%" />
 </p>   
 
@@ -68,8 +64,8 @@ Command line code:
 ```bash
 python 2d_density_estimation.py U1 made 1
 python 2d_density_estimation.py U1 made-mog 1
-python 2d_density_estimation.py U1 maf 1 -num_ar_layers=20 -alternate_input_order=1
-python 2d_density_estimation.py U1 maf 1 -num_ar_layers=20 -alternate_input_order=0
+python 2d_density_estimation.py U1 maf 1 -num_ar_layers=10 -alternate_input_order=1
+python 2d_density_estimation.py U1 maf 1 -num_ar_layers=10 -alternate_input_order=0
 python 2d_density_estimation.py U1 maf-mog 1 -num_ar_layers=5 -alternate_input_order=1
 ```
 
@@ -87,19 +83,20 @@ Estimated densities:
 
 <p align="middle">
   <img src="maf/saved/2d_density_estimation/U2 MADE Density.png" width="19%"/>
+  <img src="maf/saved/2d_density_estimation/U2 MAF (10 fixed) Density.png" width="20%" />
+  <img src="maf/saved/2d_density_estimation/U2 MAF (10) Density.png" width="19%" />
   <img src="maf/saved/2d_density_estimation/U2 MADE-MOG Density.png" width="19%" /> 
-  <img src="maf/saved/2d_density_estimation/U2 MAF (20) Density.png" width="19%" />
-  <img src="maf/saved/2d_density_estimation/U2 MAF (20 fixed) Density.png" width="20%" />
   <img src="maf/saved/2d_density_estimation/U2 MAF-MOG (5) Density.png" width="19%" />
 </p>   
+
 
 Command line code:
 
 ```bash
 python 2d_density_estimation.py U2 made 1
 python 2d_density_estimation.py U2 made-mog 1
-python 2d_density_estimation.py U2 maf 1 -num_ar_layers=20 -alternate_input_order=1
-python 2d_density_estimation.py U2 maf 1 -num_ar_layers=20 -alternate_input_order=0
+python 2d_density_estimation.py U2 maf 1 -num_ar_layers=10 -alternate_input_order=1
+python 2d_density_estimation.py U2 maf 1 -num_ar_layers=10 -alternate_input_order=0
 python 2d_density_estimation.py U2 maf-mog 1 -num_ar_layers=5 -alternate_input_order=1
 ```
 
@@ -117,19 +114,20 @@ Estimated densities:
 
 <p align="middle">
   <img src="maf/saved/2d_density_estimation/U3 MADE Density.png" width="19%"/>
+  <img src="maf/saved/2d_density_estimation/U3 MAF (10 fixed) Density.png" width="20%" />
+  <img src="maf/saved/2d_density_estimation/U3 MAF (10) Density.png" width="19%" />
   <img src="maf/saved/2d_density_estimation/U3 MADE-MOG Density.png" width="19%" /> 
-  <img src="maf/saved/2d_density_estimation/U3 MAF (20) Density.png" width="19%" />
-  <img src="maf/saved/2d_density_estimation/U3 MAF (20 fixed) Density.png" width="20%" />
   <img src="maf/saved/2d_density_estimation/U3 MAF-MOG (5) Density.png" width="19%" />
 </p>   
+
 
 Command line code:
 
 ```bash
 python 2d_density_estimation.py U3 made 1
 python 2d_density_estimation.py U3 made-mog 1
-python 2d_density_estimation.py U3 maf 1 -num_ar_layers=20 -alternate_input_order=1
-python 2d_density_estimation.py U3 maf 1 -num_ar_layers=20 -alternate_input_order=0
+python 2d_density_estimation.py U3 maf 1 -num_ar_layers=10 -alternate_input_order=1
+python 2d_density_estimation.py U3 maf 1 -num_ar_layers=10 -alternate_input_order=0
 python 2d_density_estimation.py U3 maf-mog 1 -num_ar_layers=5 -alternate_input_order=1
 ```
 
@@ -147,19 +145,20 @@ Estimated densities:
 
 <p align="middle">
   <img src="maf/saved/2d_density_estimation/U4 MADE Density.png" width="19%"/>
+  <img src="maf/saved/2d_density_estimation/U4 MAF (10 fixed) Density.png" width="20%" />
+  <img src="maf/saved/2d_density_estimation/U4 MAF (10) Density.png" width="19%" />
   <img src="maf/saved/2d_density_estimation/U4 MADE-MOG Density.png" width="19%" /> 
-  <img src="maf/saved/2d_density_estimation/U4 MAF (20) Density.png" width="19%" />
-  <img src="maf/saved/2d_density_estimation/U4 MAF (20 fixed) Density.png" width="20%" />
   <img src="maf/saved/2d_density_estimation/U4 MAF-MOG (5) Density.png" width="19%" />
 </p>   
+
 
 Command line code (using seed 1 for MAF (20) led to numerical problems for some reason):
 
 ```bash
 python 2d_density_estimation.py U4 made 1
 python 2d_density_estimation.py U4 made-mog 1
-python 2d_density_estimation.py U4 maf 20 -num_ar_layers=20 -alternate_input_order=1
-python 2d_density_estimation.py U4 maf 1 -num_ar_layers=20 -alternate_input_order=0
+python 2d_density_estimation.py U4 maf 1 -num_ar_layers=10 -alternate_input_order=1
+python 2d_density_estimation.py U4 maf 1 -num_ar_layers=10 -alternate_input_order=0
 python 2d_density_estimation.py U4 maf-mog 1 -num_ar_layers=5 -alternate_input_order=1
 ```
 
@@ -177,35 +176,43 @@ Estimated densities:
 
 <p align="middle">
   <img src="maf/saved/2d_density_estimation/U8 MADE Density.png" width="19%"/>
+  <img src="maf/saved/2d_density_estimation/U8 MAF (10 fixed) Density.png" width="20%" />
+  <img src="maf/saved/2d_density_estimation/U8 MAF (10) Density.png" width="19%" />
   <img src="maf/saved/2d_density_estimation/U8 MADE-MOG Density.png" width="19%" /> 
-  <img src="maf/saved/2d_density_estimation/U8 MAF (20) Density.png" width="19%" />
-  <img src="maf/saved/2d_density_estimation/U8 MAF (20 fixed) Density.png" width="20%" />
   <img src="maf/saved/2d_density_estimation/U8 MAF-MOG (5) Density.png" width="19%" />
 </p>   
+
 
 Command line code:
 
 ```bash
 python 2d_density_estimation.py U8 made 1
 python 2d_density_estimation.py U8 made-mog 1
-python 2d_density_estimation.py U8 maf 1 -num_ar_layers=20 -alternate_input_order=1
-python 2d_density_estimation.py U8 maf 1 -num_ar_layers=20 -alternate_input_order=0
+python 2d_density_estimation.py U8 maf 1 -num_ar_layers=10 -alternate_input_order=1
+python 2d_density_estimation.py U8 maf 1 -num_ar_layers=10 -alternate_input_order=0
 python 2d_density_estimation.py U8 maf-mog 1 -num_ar_layers=5 -alternate_input_order=1
 ```
 
 ## Task 2: High-dimensional density estimation
 
-TODO: MNIST
+MADE-MOG samples:
+
+<p align="middle">
+  <img src="maf/saved/mnist_density_estimation/mnist_gen.png" width="50%"/>
+</p>
+
+See `mnist_density_estimation.ipynb` for preprocessing, training and sampling code.
 
 ## Task 3: High-dimensional density estimation (conditional)
 
-TODO: MNIST
+Maybe in the future
 
+## Implementation notes
 
+I found MAF to be unstable if I stack many layers (e.g., 20). In particular, the test loss would explode and be highly volatile. I highly suspect this is due to this line of code:
 
+```python
+u = (x - mean) * one_over_std
+```
 
-
-
-
-
-
+Since `one_over_std` also depends on `x`, it could be erroneously high for out-of-distribution data (e.g., test data). Since batch norm parameters only come from training data, they could be bad at normalizing such high values. These high values would then be fed to the next layer, which further extracerbates the out-of-distribution problem. To combat this issue, I put a lower and upper limit on `one_over_std` through the use of sigmoid activation.

@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 
 import wandb
 
-from mades import MADE, MADE_MOG
-from mafs import MAF, MAF_MOG
+from core.mades import MADE, MADE_MOG
+from core.mafs import MAF, MAF_MOG
 
 
 def main():
@@ -107,8 +107,11 @@ def main():
         scheduler.step()
 
         with torch.no_grad():
-            ms, vs = dist.get_ms_and_vs(train_data)
-            test_loss = float(- dist.log_prob(test_data, ms=ms, vs=vs).mean())
+            if model in ["made", "made-mog"]:
+                test_loss = float(- dist.log_prob(test_data).mean())
+            elif model in ["maf", "maf-mog"]:
+                ms, vs = dist.get_ms_and_vs(train_data)
+                test_loss = float(- dist.log_prob(test_data, ms=ms, vs=vs).mean())
 
         wandb.log({
             "Loss (Train)": train_loss,
@@ -123,8 +126,8 @@ def main():
 
     # Plotting
 
-    xs = torch.linspace(-6, 6, 100)
-    ys = torch.linspace(-6, 6, 100)
+    xs = torch.linspace(-6, 6, 200)
+    ys = torch.linspace(-6, 6, 200)
     xxs, yys = torch.meshgrid(xs, ys)
     xxs_flat, yys_flat = xxs.reshape(-1, 1), yys.reshape(-1, 1)
     grid = torch.hstack([xxs_flat, yys_flat])
@@ -139,8 +142,8 @@ def main():
     plt.figure(figsize=(5, 5))
 
     plt.contourf(
-        xxs.numpy(), yys.numpy(), probs.numpy().reshape(100, 100),
-        levels=20, cmap="turbo"
+        xxs.numpy(), yys.numpy(), probs.numpy().reshape(200, 200),
+        levels=100, cmap="turbo"
     )
 
     plt.xticks([])
@@ -158,7 +161,7 @@ def main():
 
     # Save plot
 
-    plt.savefig(os.path.join(wandb.run.dir, png_name + ".png"), dpi=300, bbox_inches="tight")
+    plt.savefig(os.path.join(wandb.run.dir, png_name + ".png"), dpi=500, bbox_inches="tight")
 
     # Rest now
 
